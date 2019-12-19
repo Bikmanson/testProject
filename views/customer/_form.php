@@ -2,7 +2,6 @@
 
 use app\models\Address;
 use app\widgets\newDynamicForm\DynamicFormWidget;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -47,7 +46,7 @@ JS
             <?= $form->field($model->customer, 'first_name')->textInput(['maxlength' => true]) ?>
         </div>
         <div class="col-md-6">
-            <?= $form->field($model, 'password')->passwordInput() ?>
+            <?= $form->field($model, 'password')->passwordInput(['id' => 'password']) ?>
         </div>
     </div>
     <div class="row">
@@ -55,7 +54,7 @@ JS
             <?= $form->field($model->customer, 'last_name')->textInput(['maxlength' => true]) ?>
         </div>
         <div class="col-md-6">
-            <?= $form->field($model, 'passwordRepeat')->passwordInput() ?>
+            <?= $form->field($model, 'passwordRepeat')->passwordInput(['id' => 'passwordRepeat']) ?>
         </div>
     </div>
     <div class="row">

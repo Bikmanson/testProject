@@ -18,7 +18,7 @@ use yii\helpers\ArrayHelper;
  * @property int $created_at
  * @property string $email
  *
- * @property Address $address
+ * @property Address[] $addresses
  * @property array $sexMap
  */
 class Customer extends \yii\db\ActiveRecord
@@ -91,8 +91,8 @@ class Customer extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getAddress()
+    public function getAddresses()
     {
-        return $this->hasOne(Address::className(), ['id' => 'id']);
+        return $this->hasMany(Address::className(), ['id' => 'id']);
     }
 }

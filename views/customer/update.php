@@ -3,11 +3,11 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Customer */
+/* @var $model app\forms\CustomerForm */
 
-$this->title = 'Update Customer: ' . $model->id;
+$this->title = 'Редактировать пользователя: ' . $model->customer->id;
 $this->params['breadcrumbs'][] = ['label' => 'Customers', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->customer->id, 'url' => ['view', 'id' => $model->customer->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="customer-update">

@@ -18,20 +18,41 @@ use Yii;
  */
 class CustomerForm extends CompositeForm
 {
+    const SCENARIO_CREATE = 'create';
+
+    const SCENARIO_UPDATE = 'update';
+
     public $password;
     public $passwordRepeat;
+    public $customerModel;
 
     public function __construct($config = [])
     {
-        $this->customer = new Customer();
-        $this->addresses = [new Address()];
         parent::__construct($config);
+    }
+
+    public function init()
+    {
+        parent::init();
+
+        if (!$this->customerModel) {
+            $this->scenario = self::SCENARIO_CREATE;
+            $this->customer = new Customer();
+            $this->addresses = [new Address()];
+        } else {
+            $this->scenario = self::SCENARIO_UPDATE;
+            $this->customer = $this->customerModel;
+            $this->addresses = $this->customerModel->addresses;
+        }
     }
 
     public function rules()
     {
         return [
-            [['password', 'passwordRepeat'], 'required'],
+            [['password', 'passwordRepeat'], 'required', 'on' => self::SCENARIO_CREATE],
+            [['passwordRepeat'], 'required', 'on' => self::SCENARIO_UPDATE, 'whenClient' => "
+                return $('#password').val() != false;
+            "], // todo: doesn't work - problem with scenarios!
             [['password', 'passwordRepeat'], 'string', 'min' => 6, 'max' => 255],
             ['passwordRepeat', 'compare', 'compareAttribute' => 'password']
         ];
@@ -84,9 +105,11 @@ class CustomerForm extends CompositeForm
 
     public function attributeLabels()
     {
-        return [
-            'password' => 'Пароль',
+        $arr = [
             'passwordRepeat' => 'Повторите пароль'
         ];
+        $arr['password'] = $this->scenario === self::SCENARIO_CREATE ? 'Пароль' : 'Изменить пароль';
+
+        return $arr;
     }
 }

@@ -54,7 +54,7 @@ class CustomerController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->findCustomer($id),
         ]);
     }
 
@@ -85,7 +85,8 @@ class CustomerController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $customerModel = $this->findCustomer($id);
+        $model = new CustomerForm(['customerModel' => $customerModel]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -105,7 +106,7 @@ class CustomerController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $this->findCustomer($id)->delete();
 
         return $this->redirect(['index']);
     }
@@ -117,7 +118,7 @@ class CustomerController extends Controller
      * @return Customer the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findCustomer($id)
     {
         if (($model = Customer::findOne($id)) !== null) {
             return $model;
