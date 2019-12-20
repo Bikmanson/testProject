@@ -53,7 +53,7 @@ class Address extends \yii\db\ActiveRecord
             [['post_index'], 'string', 'min' => 5, 'max' => 5],
             [['post_index'], 'postIndexValidator'],
             [['city', 'street'], 'string', 'max' => 255],
-            [['id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['id' => 'id']],
+            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
         ];
     }
 
@@ -69,7 +69,7 @@ class Address extends \yii\db\ActiveRecord
         $this->$attribute = strtoupper($this->$attribute);
 
         $result = ctype_upper($this->$attribute);
-        if (!$result) $this->addError($attribute, $this->getAttributeLabel($attribute)." может содержать только буквы.");
+        if (!$result) $this->addError($attribute, $this->getAttributeLabel($attribute)." может содержать только буквы и быть латинской раскладки.");
         return $result;
     }
 
@@ -104,6 +104,6 @@ class Address extends \yii\db\ActiveRecord
      */
     public function getCustomer()
     {
-        return $this->hasOne(Customer::className(), ['id' => 'id']);
+        return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
     }
 }

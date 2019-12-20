@@ -12,8 +12,9 @@ use yii\widgets\ActiveForm;
 $this->registerJs(<<<JS
 $(document).ready(function() {
     $(".remove-item").on("click", function(){
+        let length = $('#body .addresses-item:nth-child(n)').length;
         let id = $(this).data("itemId");
-        if (id !== 0) {
+        if (id !== 0 && length !== 1) { // 1 is the min value for items
             let deletedAddressIds = $("#deletedAddressIds");
             deletedAddressIds.val(deletedAddressIds.val() + "," + id);
         }
@@ -82,7 +83,7 @@ JS
     ]);
     ?>
 
-    <div class="addresses-body row">
+    <div id="body" class="addresses-body row">
         <?= Html::hiddenInput("deletedAddressIds", null, ["id" => "deletedAddressIds"]); ?>
         <?php foreach ($model->addresses as $i => $model): ?>
             <? /** @var $model Address */ ?>

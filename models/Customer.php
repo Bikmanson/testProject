@@ -93,6 +93,6 @@ class Customer extends \yii\db\ActiveRecord
      */
     public function getAddresses()
     {
-        return $this->hasMany(Address::className(), ['id' => 'id']);
+        return $this->hasMany(Address::className(), ['customer_id' => 'id']);
     }
 }

@@ -26,11 +26,6 @@ class CustomerForm extends CompositeForm
     public $passwordRepeat;
     public $customerModel;
 
-    public function __construct($config = [])
-    {
-        parent::__construct($config);
-    }
-
     public function init()
     {
         parent::init();
@@ -50,11 +45,17 @@ class CustomerForm extends CompositeForm
     {
         return [
             [['password', 'passwordRepeat'], 'required', 'on' => self::SCENARIO_CREATE],
-            [['passwordRepeat'], 'required', 'on' => self::SCENARIO_UPDATE, 'whenClient' => "
-                return $('#password').val() != false;
-            "], // todo: doesn't work - problem with scenarios!
+            [['passwordRepeat'], 'required', 'on' => self::SCENARIO_UPDATE,
+                'when' => function ($attribute) {
+                    return $this->password != false;
+                },
+                'whenClient' => "
+                    function (attribute, value) {
+                        return $('#password').val() != false;
+                    }
+            "],
             [['password', 'passwordRepeat'], 'string', 'min' => 6, 'max' => 255],
-            ['passwordRepeat', 'compare', 'compareAttribute' => 'password']
+            ['passwordRepeat', 'compare', 'compareAttribute' => 'password'],
         ];
     }
 
@@ -72,7 +73,8 @@ class CustomerForm extends CompositeForm
         if (is_array($data['Address']) && !empty($data['Address'])) {
             $addresses = [];
             for ($i = 0; $i < count($data['Address']); $i++) {
-                $addresses[] = new Address();
+                $id = $data['Address'][$i]['id'];
+                $addresses[] = $id ? Address::findOne($id) : new Address();
             }
             if (!empty($addresses)) $this->addresses = $addresses;
         }
@@ -82,15 +84,24 @@ class CustomerForm extends CompositeForm
 
     public function save($validation = true)
     {
-        if ($validation && !$this->validate()) return false;
+        if ($validation && !$this->validate()) {
+            $this->addErrors($this->getErrors());
+            return false;
+        }
 
         $transaction = Yii::$app->db->beginTransaction();
         $success = false;
 
-        $this->customer->password_hash = Yii::$app->security->generatePasswordHash($this->password);
+        if ($this->password) $this->customer->password_hash = Yii::$app->security->generatePasswordHash($this->password);
         $this->customer->first_name = ucfirst($this->_forms['customer']->first_name);
         $this->customer->last_name = ucfirst($this->_forms['customer']->last_name);
-        if ($success = $this->customer->save() && !empty($this->addresses)) {
+        if ($success = ($this->customer->save() && !empty($this->addresses))) {
+            $deletedIds = array_filter(explode(',', Yii::$app->request->post()['deletedAddressIds']));
+            if (!empty($deletedIds)) {
+                foreach ($deletedIds as $id) {
+                    $success = Address::findOne($id)->delete() != false;
+                }
+            }
             foreach ($this->addresses as $address) {
                 /** @var $address Address */
                 if (!$success) break;

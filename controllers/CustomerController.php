@@ -67,8 +67,12 @@ class CustomerController extends Controller
     {
         $model = new CustomerForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $success = null;
+        if ($model->load(Yii::$app->request->post()) && $success = $model->save()) {
+            Yii::$app->session->setFlash('success', "Пользователь успешно сохранен");
             return $this->redirect(['view', 'id' => $model->customer->id]);
+        } elseif ($success === false) {
+            Yii::$app->session->setFlash('danger', "Пользователь не был сохранен!");
         }
 
         return $this->render('create', [
@@ -88,8 +92,12 @@ class CustomerController extends Controller
         $customerModel = $this->findCustomer($id);
         $model = new CustomerForm(['customerModel' => $customerModel]);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $success = null;
+        if ($model->load(Yii::$app->request->post()) && $success = $model->save()) {
+            Yii::$app->session->setFlash('success', "Информация успешно обновлена");
+            return $this->redirect(['update', 'id' => $model->customer->id]);
+        } elseif ($success === false) {
+            Yii::$app->session->setFlash('danger', "Информация не была обновлена!");
         }
 
         return $this->render('update', [
