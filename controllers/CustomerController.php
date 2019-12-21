@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\forms\CustomerForm;
+use app\models\AddressSearch;
 use Yii;
 use app\models\Customer;
 use app\models\CustomerSearch;
@@ -53,8 +54,13 @@ class CustomerController extends Controller
      */
     public function actionView($id)
     {
+        $searchModel = new AddressSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, ['customer_id' => $id]);
+
         return $this->render('view', [
             'model' => $this->findCustomer($id),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 

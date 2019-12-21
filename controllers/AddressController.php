@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Customer;
 use Yii;
 use app\models\Address;
 use app\models\AddressSearch;
@@ -60,18 +61,21 @@ class AddressController extends Controller
     /**
      * Creates a new Address model.
      * If creation is successful, the browser will be redirected to the 'view' page.
+     * @param $customer_id
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($customer_id)
     {
-        $model = new Address();
+        $model = new Address(['customer_id' => $customer_id]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->addFlash('success', 'Адрес успешно добавлен.');
+            return $this->redirect(['/customer/view', 'id' => $customer_id]);
         }
 
         return $this->render('create', [
             'model' => $model,
+            'customer_id' => $customer_id
         ]);
     }
 
@@ -104,9 +108,14 @@ class AddressController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        if (Address::find()->where(['customer_id' => $model->customer_id])->count() > 1) {
+            if ($model->delete()) Yii::$app->session->addFlash('success', 'Адрес успешно удален.');
+        } else {
+            Yii::$app->session->addFlash('danger', 'Адрес не был удален - пользователь должен иметь хотя-бы один адрес.');
+        }
 
-        return $this->redirect(['index']);
+        return Yii::$app->getResponse()->redirect(Yii::$app->request->referrer);
     }
 
     /**

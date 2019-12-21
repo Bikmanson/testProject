@@ -12,24 +12,32 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'id')->textInput() ?>
-
-    <?= $form->field($model, 'post_index')->textInput() ?>
-
-    <?= $form->field($model, 'country')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'city')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'street')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'house_number')->textInput() ?>
-
-    <?= $form->field($model, 'office_number')->textInput() ?>
-
-    <?= $form->field($model, 'customer_id')->textInput() ?>
+    <div class="row">
+        <div class="col-md-4">
+            <?= $form->field($model, "country")->textInput(['maxlength' => true]) ?>
+        </div>
+        <div class="col-md-4">
+            <?= $form->field($model, "city")->textInput(['maxlength' => true]) ?>
+        </div>
+        <div class="col-md-4">
+            <?= $form->field($model, "street")->textInput(['maxlength' => true]) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <?= $form->field($model, "house_number")->textInput(['maxlength' => true]) ?>
+        </div>
+        <div class="col-md-4">
+            <?= $form->field($model, "office_number")->textInput() ?>
+        </div>
+        <div class="col-md-4">
+            <?= $form->field($model, "post_index")->textInput(['maxlength' => true]) ?>
+        </div>
+    </div>
+</div>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

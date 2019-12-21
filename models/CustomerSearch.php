@@ -43,6 +43,7 @@ class CustomerSearch extends Customer
      *
      * @param array $params
      *
+     * @param int $pageSize
      * @return ActiveDataProvider
      */
     public function search($params)
@@ -53,6 +54,9 @@ class CustomerSearch extends Customer
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 50
+            ]
         ]);
 
         $this->load($params);

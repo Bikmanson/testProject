@@ -7,16 +7,11 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\AddressSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Addresses';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Адресы';
 ?>
 <div class="address-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Address', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <h2><?= Html::encode($this->title) ?></h2>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -26,16 +21,39 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'post_index',
             'country',
             'city',
             'street',
-            //'house_number',
-            //'office_number',
-            //'customer_id',
+            'house_number',
+            'office_number',
+            'post_index',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{create} {update} {delete}',
+                'buttons' => [
+                    'create' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-plus"></span>', ['/address/create', 'customer_id' => $model->customer_id], [
+                            'title' => 'Создать',
+                            'target' => '_blank'
+                        ]);
+                    },
+                    'update' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['/customer/update', 'id' => $model->customer_id], [
+                            'title' => 'Создать',
+                        ]);
+                    },
+                    'delete' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['/address/delete', 'id' => $model->id], [
+                            'title' => 'Создать',
+                            'data' => [
+                                'method' => 'post',
+                                'confirm' => 'Вы уверены, что хотите удалить адрес?'
+                            ]
+                        ]);
+                    }
+                ]
+            ],
         ],
     ]); ?>
 

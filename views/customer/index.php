@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'login',
                 'format' => 'html',
                 'value' => function ($model) {
-                    return Html::a($model->login, ['update', 'id' => $model->id]);
+                    return Html::a($model->login, ['view', 'id' => $model->id]);
                 }
             ],
             'first_name',

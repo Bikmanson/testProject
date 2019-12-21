@@ -1,13 +1,19 @@
 <?php
 
+use app\models\Customer;
+use kartik\daterange\DateRangePicker;
+use yii\grid\ActionColumn;
+use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Customer */
+/* @var $searchModel app\models\CustomerSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Customers', 'url' => ['index']];
+$this->title = $model->login;
+$this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -16,11 +22,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Обновить', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Вы уверены, что хотите удалить пользователя и все его адреса?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -29,15 +35,26 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'login',
-            'password_hash',
             'first_name',
             'last_name',
-            'sex',
-            'created_at',
             'email:email',
+            [
+                'attribute' => 'sex',
+                'value' => function ($model) {
+                    return Customer::getSexMap()[$model->sex];
+                }
+            ],
+            [
+                'attribute' => 'created_at',
+                'format' => ['datetime', 'php:d.m.Y'],
+            ],
         ],
+    ]) ?>
+
+    <?php echo $this->render('/address/index.php', [
+        'dataProvider' => $dataProvider,
+        'searchModel' => $searchModel,
     ]) ?>
 
 </div>

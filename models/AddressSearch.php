@@ -17,7 +17,7 @@ class AddressSearch extends Address
     public function rules()
     {
         return [
-            [['id', 'post_index', 'house_number', 'office_number', 'customer_id'], 'integer'],
+            [['post_index', 'house_number', 'office_number'], 'integer'],
             [['country', 'city', 'street'], 'safe'],
         ];
     }
@@ -36,16 +36,20 @@ class AddressSearch extends Address
      *
      * @param array $params
      *
+     * @param $conditions
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $conditions = [])
     {
-        $query = Address::find();
+        $query = Address::find()->filterWhere($conditions);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 5
+            ]
         ]);
 
         $this->load($params);
@@ -58,11 +62,9 @@ class AddressSearch extends Address
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
             'post_index' => $this->post_index,
             'house_number' => $this->house_number,
-            'office_number' => $this->office_number,
-            'customer_id' => $this->customer_id,
+            'office_number' => $this->office_number
         ]);
 
         $query->andFilterWhere(['like', 'country', $this->country])
