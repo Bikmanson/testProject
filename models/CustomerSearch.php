@@ -11,14 +11,21 @@ use app\models\Customer;
  */
 class CustomerSearch extends Customer
 {
+    public $createdAtRange;
+
+    public $dateStart;
+
+    public $dateEnd;
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id', 'sex', 'created_at'], 'integer'],
-            [['login', 'password_hash', 'first_name', 'last_name', 'email'], 'safe'],
+            [['sex'], 'integer'],
+            [['createdAtRange', 'dateStart', 'dateEnd'], 'string'],
+            [['login', 'first_name', 'last_name', 'email'], 'safe'],
         ];
     }
 
@@ -56,15 +63,22 @@ class CustomerSearch extends Customer
             return $dataProvider;
         }
 
+        if (!empty($this->createdAtRange) && strpos($this->createdAtRange, '-') !== false) {
+            list($dateStart, $dateEnd) = explode(' - ', $this->createdAtRange);
+            $query->andFilterWhere([
+                'between',
+                'created_at',
+                strtotime($dateStart),
+                strtotime($dateEnd) + 86399, //seconds in day - 1 (day end included)
+            ]);
+        }
+
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'sex' => $this->sex,
-            'created_at' => $this->created_at,
+            'sex' => $this->sex
         ]);
 
         $query->andFilterWhere(['like', 'login', $this->login])
-            ->andFilterWhere(['like', 'password_hash', $this->password_hash])
             ->andFilterWhere(['like', 'first_name', $this->first_name])
             ->andFilterWhere(['like', 'last_name', $this->last_name])
             ->andFilterWhere(['like', 'email', $this->email]);

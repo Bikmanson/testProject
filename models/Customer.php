@@ -52,7 +52,7 @@ class Customer extends \yii\db\ActiveRecord
         return [
             [['login', 'first_name', 'last_name', 'sex', 'email'], 'required'],
             [['created_at', 'updated_at'], 'integer'],
-            [['sex'], 'in', 'range' => array_keys($this->getSexMap())],
+            [['sex'], 'in', 'range' => array_keys(self::getSexMap())],
             [['password_hash', 'first_name', 'last_name'], 'string', 'max' => 255],
             [['login'], 'string', 'min' => 4, 'max' => 255],
             [['email'], 'email'],
@@ -61,7 +61,7 @@ class Customer extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getSexMap()
+    public static function getSexMap()
     {
         return [
             self::SEX_MAN => 'Мужской',

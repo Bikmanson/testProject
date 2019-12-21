@@ -70,7 +70,7 @@ class CustomerController extends Controller
         $success = null;
         if ($model->load(Yii::$app->request->post()) && $success = $model->save()) {
             Yii::$app->session->setFlash('success', "Пользователь успешно сохранен");
-            return $this->redirect(['view', 'id' => $model->customer->id]);
+            return $this->redirect(['update', 'id' => $model->customer->id]);
         } elseif ($success === false) {
             Yii::$app->session->setFlash('danger', "Пользователь не был сохранен!");
         }

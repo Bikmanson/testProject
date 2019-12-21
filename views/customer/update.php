@@ -6,9 +6,9 @@ use yii\helpers\Html;
 /* @var $model app\forms\CustomerForm */
 
 $this->title = 'Редактировать пользователя: ' . $model->customer->id;
-$this->params['breadcrumbs'][] = ['label' => 'Customers', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->customer->id, 'url' => ['view', 'id' => $model->customer->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->customer->login, 'url' => ['view', 'id' => $model->customer->id]];
+$this->params['breadcrumbs'][] = 'Редактировать';
 ?>
 <div class="customer-update">
 

@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Address;
+use app\models\Customer;
 use app\widgets\newDynamicForm\DynamicFormWidget;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -60,7 +61,7 @@ JS
     </div>
     <div class="row">
         <div class="col-md-3">
-            <?= $form->field($model->customer, 'sex')->dropDownList($model->customer->sexMap, [
+            <?= $form->field($model->customer, 'sex')->dropDownList(Customer::getSexMap(), [
                 'prompt' => 'Выберите пол'
             ]) ?>
         </div>
